@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FPS Game</title>
+
+<body oncontextmenu="return false">
+</body>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+precision mediump float;
+precision mediump int;
+
+attribute vec4 vPosition;
+attribute vec4 vNormal;
+
+attribute vec2 vTexCoord;
+varying vec2 fTexCoord;
+uniform int texNum;
+
+uniform vec4 vColor;
+varying vec4 fColor;
+varying vec3 N, L, E;
+varying vec3 L1;//+
+varying vec3 L2;//+
+uniform vec4 lightPosition[3];
+
+uniform mat4 viewMatrix;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+
+uniform vec4 ambientProduct;
+uniform vec4 diffuseProduct[3];
+uniform vec4 specularProduct[3];
+uniform float shininess;
+uniform int muzzleFlash;
+
+varying float distance;
+
+void main()
+{
+	vec3 objPos = (modelViewMatrix * vPosition).xyz;
+	vec3 lightPos = (viewMatrix * lightPosition[0]).xyz;
+	L = normalize(lightPos - objPos);
+	E = -normalize(objPos);
+	N = normalize((modelViewMatrix * vNormal).xyz);
+	
+	//2nd light
+	vec3 lightPos1 = ((viewMatrix * lightPosition[1]).xyz);//+
+	L1 = lightPos1 - objPos;
+	distance = sqrt(L1[0]*L1[0] + L1[1]*L1[1] + L1[2]*L1[2]);
+	L1 = normalize(lightPos1 - objPos);
+	
+	//muzzle flash
+	if (muzzleFlash == 1)
+	{
+		vec3 lightPos2 = ((viewMatrix * lightPosition[2]).xyz);//+
+		L2 = normalize(lightPos2 - objPos);
+	}
+	
+	gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+	
+	if (texNum == 1 || texNum == 2 || texNum == 3) {
+		fTexCoord = vTexCoord;
+	}
+}
+
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+precision mediump int;
+
+varying vec2 fTexCoord;
+uniform sampler2D tex_metal;
+uniform sampler2D tex_grass;
+uniform sampler2D tex_cat;
+uniform int texNum;
+
+varying vec4 fColor;
+varying vec3 N, L, E;
+varying vec3 L1;//+
+varying vec3 L2;//+
+
+uniform vec4 ambientProduct;
+uniform vec4 diffuseProduct[3];
+uniform vec4 specularProduct[3];
+uniform float shininess;
+uniform int muzzleFlash;
+
+varying float distance;
+
+void main()
+{
+	vec4 fragColor;
+	
+	vec3 H = normalize(L + E);
+	
+	vec4 ambient = ambientProduct;
+	
+	float Kd = max(dot(L, N), 0.0);
+	vec4 diffuse = Kd * diffuseProduct[0];
+		
+	float Ks = pow(max(dot(N, H), 0.0), shininess);
+	vec4 specular = Ks * specularProduct[0];
+		
+	if (dot(L, N) < 0.0)
+		specular = vec4(0.0, 0.0, 0.0, 1.0);
+			
+	fragColor = ambient + diffuse + specular;
+	
+	///////2nd light
+	vec3 H1 = normalize(L1 + E);
+	
+	float Kd1 = max(dot(L1, N), 0.0);
+	vec4 diffuse1 = Kd1 * diffuseProduct[1];
+	
+	float Ks1 = pow(max(dot(N, H1), 0.0), shininess);
+	vec4 specular1 = Ks1 * specularProduct[1];
+	
+	if (dot(L1, N) < 0.0)
+		specular1 = vec4(0.0, 0.0, 0.0, 1.0);
+	
+	vec4 secondfragColor =  diffuse1 + specular1;
+	
+	if (distance < 5.0)
+	{
+		secondfragColor.x = secondfragColor.x/2.0;
+		secondfragColor.y = secondfragColor.y/2.0;
+		secondfragColor.z = secondfragColor.z/2.0;
+	}
+	else
+	{
+		secondfragColor.x = 0.0;
+		secondfragColor.y = 0.0;
+		secondfragColor.z = 0.0;
+	}
+	
+	fragColor += secondfragColor;
+	
+	///////muzzle flash
+	if (muzzleFlash == 1)
+	{
+		vec3 H2 = normalize(L2 + E);
+		
+		float Kd2 = max(dot(L2, N), 0.0);
+		vec4 diffuse2 = Kd2 * diffuseProduct[2];
+		
+		float Ks2 = pow(max(dot(N, H2), 0.0), shininess);
+		vec4 specular2 = Ks2 * specularProduct[2];
+		
+		if (dot(L2, N) < 0.0)
+			specular2 = vec4(0.0, 0.0, 0.0, 1.0);
+		
+		vec4 muzzlefragColor =  diffuse2 + specular2;
+		muzzlefragColor.x = muzzlefragColor.x;
+		muzzlefragColor.y = muzzlefragColor.y;
+		muzzlefragColor.z = muzzlefragColor.z;
+		
+		fragColor +=  muzzlefragColor;
+	}
+	/////////////////////////////////////////////
+	
+	fragColor.a = 1.0;
+	
+	fragColor.a = ambient[3]; 
+	
+	if (texNum == 1) {
+		gl_FragColor = fragColor * texture2D(tex_metal, fTexCoord);
+	}
+	else if (texNum == 2) {
+		gl_FragColor = fragColor * texture2D(tex_grass, fTexCoord);
+	}
+	else if (texNum == 3) {
+		gl_FragColor = fragColor * texture2D(tex_cat, fTexCoord);
+	}
+	else {
+		gl_FragColor = fragColor;
+	}
+}
+
+</script>
+
+<audio id="pistolshot" src="../Common/pistolshot.wav" preload="auto"></audio>
+<audio id="shotgunshot" src="../Common/shotgunshot.wav" preload="auto"></audio>
+<audio id="rocketshot" src="../Common/rocket1.wav" preload="auto"></audio>
+<audio id="shellfalling" src="../Common/shellfalling.wav" preload="auto"></audio>
+<audio id="shotgunreload" src="../Common/shotgunreload.mp3" preload="auto"></audio>
+<audio id="pistolreload" src="../Common/pistolreload.wav" preload="auto"></audio>
+<audio id="rpgreload" src="../Common/rpgreload.wav" preload="auto"></audio>
+<audio id="hurt" src="../Common/hurt.mp3" preload="auto"></audio>
+<audio id="cataudio" src="../Common/hurt.mp3" preload="auto"></audio>
+<audio id="theme" src="../Common/wrathofcodesoft.mp3" preload="auto" loop="loop"></audio>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/InitShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="globalVars.js"></script>
+<script type="text/javascript" src="classes.js"></script>
+<script type="text/javascript" src="controls.js"></script>
+<script type="text/javascript" src="bullet.js"></script>
+<script type="text/javascript" src="enemy.js"></script>
+<script type="text/javascript" src="user_interface.js"></script>
+<script type="text/javascript" src="collision.js"></script>
+<script type="text/javascript" src="level.js"></script>
+<script type="text/javascript" src="fps.js"></script>
+
+<body>
+<canvas id="gl-canvas" width="1440" height="810">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+<img id="img_metal" src="img_metal.jpg" hidden></img>
+<img id="img_grass" src="img_grass.jpg" hidden></img>
+<img id="img_cat" src="img_cat.jpg" hidden></img>
+
+<br/>
+
+</body>
+</html>
