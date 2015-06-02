@@ -283,7 +283,7 @@ var initCamZ = 0.0;
 
 // Amount to translate and rotate camera on user input
 var translateAmt = 0.1;
-var rotateAmt = 0.6;
+var rotateAmt = 1.4;
 
 var prevRenderTime = performance.now();
 var prevEnemySpawnTime = performance.now() - 20000;
