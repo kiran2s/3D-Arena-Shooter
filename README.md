@@ -1,7 +1,7 @@
 # FPSgame
 
 Controls:
-Move mouse while holding down right mouse button to aim.
+To aim, move the mouse while holding down the right mouse button.
 Left mouse button to shoot.
 W,A,S,D to move forwards, left, backwards, and right respectively.
 Space bar to jump.
