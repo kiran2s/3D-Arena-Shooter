@@ -1,4 +1,5 @@
 # FPSgame
+by Kiran Sivakumar, Jordan Miller, and Benjamin Statz
 
 Controls:
 To aim, move the mouse while holding down the right mouse button.
