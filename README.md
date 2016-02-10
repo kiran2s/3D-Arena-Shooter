@@ -23,7 +23,7 @@ NOTE: Your aiming sensitivity might be too high or too low based on your mouse's
 2) Find the var named "rotateAmt" and adjust its value accordingly (higher value for increased sensitivity).
 
 
-Controls:
+CONTROLS:
 Move the mouse while holding down the right mouse button to aim
 (the right mouse button must be held inside the game view frame
 of the browser in order for aiming to work).
