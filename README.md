@@ -18,11 +18,12 @@ ammo capacity of your current gun.
 NOTE: Please use Firefox to play this game as it is the only known
 browser that completely supports our game. A workaround needs to be done to allow textures to load on a Chrome. 
 
-NOTE: Your aiming sensitivity might be too high or too low based on your mouse's settings and DPI. 
+NOTE: Your aiming sensitivity might be too high or too low based on your mouse's settings and DPI.
+
 To alter the in-game mouse sensitivity:
+
 1. Locate the globalVars.js file in the Project folder and open it using Notepad.
-2. Find the var named "rotateAmt" and adjust its value accordingly.
-	- the higher the value, the higher the aiming sensitivity.
+2. Find the var named "rotateAmt" and adjust its value accordingly (higher value for increased sensitivity).
 
 
 Controls:
