@@ -42,6 +42,8 @@ Space bar to jump
 
 -------------------------------------------------------------------------
 
+NO additional supporting libraries were used (such as three.js, BabylonJS etc.).
+
 3 weapons were implemented: a pistol, shotgun, and rocket launcher.
 Cool lighting effects were implemented:
  - There is a main light present (like the sun).
