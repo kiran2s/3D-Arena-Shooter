@@ -1,8 +1,12 @@
 # FPSgame
 by Kiran Sivakumar, Jordan Miller, and Benjamin Statz
 
-For our term project, we made an first-person-shooter game, 
-in which the objective is to eliminate as many cats as possible!
+This project is a 3D arena-style first-person-shooter game for the
+Firefox web browser developed using WebGL with no additional
+supporting libraries.
+The objective of the game is to use the 3 guns you have at your
+disposal to emiminate as many enemies as possible before they
+eliminate you.
 There is one level in which waves of enemies (the cats)
 spawn from each of the 4 corners. You start off at the middle
 of the map. 
