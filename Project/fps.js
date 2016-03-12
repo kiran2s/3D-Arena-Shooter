@@ -571,10 +571,6 @@ function render()
 	}
 	gl.uniform1i (muzzleFlash, 0);
 	
-	/////////////////////////
-	// Jordan's code
-	/////////////////////////
-	
 	//draw health bars for ui
 	if (flash_red != 0)
 	{
