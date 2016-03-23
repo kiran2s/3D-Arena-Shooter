@@ -26,8 +26,9 @@ NOTE: Your aiming sensitivity might be too high or too low based on your mouse's
 1) Locate the globalVars.js file in the Project folder and open it using Notepad.
 2) Find the var named "rotateAmt" and adjust its value accordingly (higher value for increased sensitivity).
 
+-------------------------------------------------------------------------
 
-CONTROLS:
+### Controls:
 Move the mouse while holding down the right mouse button to aim
 (the right mouse button must be held inside the game view frame
 of the browser in order for aiming to work).
@@ -45,6 +46,8 @@ F to switch weapons
 Space bar to jump
 
 -------------------------------------------------------------------------
+
+### Details
 
 NO additional supporting libraries were used (such as three.js, BabylonJS etc.).
 
