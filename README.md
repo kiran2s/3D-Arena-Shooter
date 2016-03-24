@@ -1,5 +1,4 @@
 # FPS-Game
-by Kiran Sivakumar, Jordan Miller, and Benjamin Statz
 
 This project is a 3D arena-style first-person-shooter game for the
 Firefox web browser developed using WebGL with no additional
